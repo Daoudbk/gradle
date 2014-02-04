@@ -18,7 +18,7 @@ package org.gradle.tooling.model;
 import org.gradle.api.Incubating;
 
 /**
- * Represents an entry point that uses task name to select tasks to execute.
+ * Represents an entry point that uses task name to select tasks executed from a given context.
  *
  * @since 1.12
  */
@@ -28,5 +28,5 @@ public interface TaskSelector extends EntryPoint {
      * Returns the display name.
      * @return Display name of the task
      */
-    String getName();
+    String getDisplayName();
 }

@@ -32,8 +32,20 @@ rootProject.name = 'test'
 '''
         file('b').mkdirs()
         file('b').file('build.gradle').text = '''
+task t3 << {
+    println "t1 in $project.name"
+}
+task t2 << {
+    println "t2 in $project.name"
+}
+'''
+        file('b/c').mkdirs()
+        file('b/c').file('build.gradle').text = '''
 task t1 << {
     println "t1 in $project.name"
+}
+task t2 << {
+    println "t2 in $project.name"
 }
 '''
     }
@@ -58,8 +70,14 @@ task t1 << {
         result != null
         result.keySet() == ['test', 'a', 'b', 'c'] as Set
         result['test'].contains('t1')
+        result['test'].contains('t2')
+        result['test'].contains('t3')
         result['b'].contains('t1')
+        result['b'].contains('t2')
+        !result['b'].contains('t3')
         !result['c'].contains('t1')
+        !result['c'].contains('t2')
+        !result['c'].contains('t3')
     }
 
     def "can request task selectors from obtained GradleProject model"() {
@@ -71,5 +89,11 @@ task t1 << {
         result.getTaskSelectors().find { it.name == 't1' } != null
         result.findByPath(':b').getTaskSelectors().find { it.name == 't1' } != null
         result.findByPath(':b:c').getTaskSelectors().find { it.name == 't1' } == null
+        result.getTaskSelectors().find { it.name == 't2' } != null
+        result.findByPath(':b').getTaskSelectors().find { it.name == 't2' } != null
+        result.findByPath(':b:c').getTaskSelectors().find { it.name == 't2' } == null
+        result.getTaskSelectors().find { it.name == 't3' } != null
+        result.findByPath(':b').getTaskSelectors().find { it.name == 't3' } == null
+        result.findByPath(':b:c').getTaskSelectors().find { it.name == 't3' } == null
     }
 }

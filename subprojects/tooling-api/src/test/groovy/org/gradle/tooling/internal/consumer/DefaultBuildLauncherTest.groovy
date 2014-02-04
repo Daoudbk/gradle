@@ -197,16 +197,16 @@ class DefaultBuildLauncherTest extends ConcurrentSpec {
         operation.runBuild.end > instant.failureAvailable
     }
 
-    def "rejects unknown EntryPoint"() {
-        EntryPoint task = Mock(EntryPoint)
-
-        when:
-        launcher.forTasks(task)
-
-        then:
-        def e = thrown(GradleException)
-        e != null
-    }
+//    def "rejects unknown EntryPoint"() {
+//        EntryPoint task = Mock(EntryPoint)
+//
+//        when:
+//        launcher.forTasks(task)
+//
+//        then:
+//        def e = thrown(GradleException)
+//        e != null
+//    }
 
     def task(String path) {
         Task task = Mock()

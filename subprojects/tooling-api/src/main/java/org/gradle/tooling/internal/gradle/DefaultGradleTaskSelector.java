@@ -16,6 +16,7 @@
 
 package org.gradle.tooling.internal.gradle;
 
+import org.gradle.api.Nullable;
 import org.gradle.tooling.model.TaskSelector;
 
 import java.io.Serializable;
@@ -24,13 +25,35 @@ import java.io.Serializable;
  * Data used for {@link org.gradle.tooling.model.TaskSelector}.
  */
 public class DefaultGradleTaskSelector implements TaskSelector, Serializable {
-    String name;
+    private String name;
+    private String displayName;
+    private String description;
+
     public String getName() {
         return name;
     }
 
     public DefaultGradleTaskSelector setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    @Nullable
+    public String getDescription() {
+        return description;
+    }
+
+    public DefaultGradleTaskSelector setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public DefaultGradleTaskSelector setDisplayName(String displayName) {
+        this.displayName = displayName;
         return this;
     }
 
