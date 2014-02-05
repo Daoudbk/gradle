@@ -18,6 +18,8 @@ package org.gradle.tooling.internal.gradle;
 
 import org.gradle.api.Nullable;
 import org.gradle.tooling.model.TaskSelector;
+import org.gradle.tooling.model.gradle.*;
+import org.gradle.tooling.model.gradle.BasicGradleProject;
 
 import java.io.Serializable;
 
@@ -28,6 +30,7 @@ public class DefaultGradleTaskSelector implements TaskSelector, Serializable {
     private String name;
     private String displayName;
     private String description;
+    private BasicGradleProject project;
 
     public String getName() {
         return name;
@@ -54,6 +57,15 @@ public class DefaultGradleTaskSelector implements TaskSelector, Serializable {
 
     public DefaultGradleTaskSelector setDisplayName(String displayName) {
         this.displayName = displayName;
+        return this;
+    }
+
+    public BasicGradleProject getProject() {
+        return null;
+    }
+
+    public DefaultGradleTaskSelector setProject(BasicGradleProject project) {
+        this.project = project;
         return this;
     }
 

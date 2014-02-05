@@ -15,15 +15,16 @@
  */
 package org.gradle.tooling.internal.consumer;
 
+import org.gradle.api.GradleException;
 import org.gradle.tooling.BuildLauncher;
 import org.gradle.tooling.ResultHandler;
-import org.gradle.tooling.exceptions.UnsupportedOperationConfigurationException;
 import org.gradle.tooling.internal.consumer.async.AsyncConsumerActionExecutor;
 import org.gradle.tooling.internal.consumer.connection.ConsumerAction;
 import org.gradle.tooling.internal.consumer.connection.ConsumerConnection;
 import org.gradle.tooling.internal.consumer.parameters.ConsumerOperationParameters;
 import org.gradle.tooling.model.EntryPoint;
 import org.gradle.tooling.model.Task;
+import org.gradle.tooling.model.TaskSelector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,8 +35,8 @@ class DefaultBuildLauncher extends AbstractLongRunningOperation<DefaultBuildLaun
     private final AsyncConsumerActionExecutor connection;
 
     public DefaultBuildLauncher(AsyncConsumerActionExecutor connection, ConnectionParameters parameters) {
-        super(new ConsumerOperationParameters(parameters));
-        operationParameters.setTasks(Collections.<String>emptyList());
+        super(parameters);
+        operationParamsBuilder.setTasks(Collections.<String>emptyList());
         this.connection = connection;
     }
 
@@ -45,7 +46,7 @@ class DefaultBuildLauncher extends AbstractLongRunningOperation<DefaultBuildLaun
     }
 
     public BuildLauncher forTasks(String... tasks) {
-        operationParameters.setTasks(Arrays.asList(tasks));
+        operationParamsBuilder.setTasks(Arrays.asList(tasks));
         return this;
     }
 
@@ -56,19 +57,31 @@ class DefaultBuildLauncher extends AbstractLongRunningOperation<DefaultBuildLaun
 
     public BuildLauncher forTasks(Iterable<? extends Task> tasks) {
         List<String> taskPaths = new ArrayList<String>();
-        for (EntryPoint task : tasks) {
-            taskPaths.add(((Task) task).getPath());
+        for (Task task : tasks) {
+            taskPaths.add(task.getPath());
         }
-        operationParameters.setTasks(taskPaths);
+        operationParamsBuilder.setTasks(taskPaths);
         return this;
     }
 
     public BuildLauncher forEntryPoints(EntryPoint... entryPoints) {
-        throw new UnsupportedOperationConfigurationException("not implemented yet");
+        return forEntryPoints(Arrays.asList(entryPoints));
     }
 
     public BuildLauncher forEntryPoints(Iterable<? extends EntryPoint> entryPoints) {
-        throw new UnsupportedOperationConfigurationException("not implemented yet");
+        List<String> taskPaths = new ArrayList<String>();
+        for (EntryPoint task : entryPoints) {
+            if (task instanceof Task) {
+                taskPaths.add(((Task) task).getPath());
+            } else if (task instanceof TaskSelector) {
+                taskPaths.add(task.getName());
+                connectionParamsBuilder.setProjectDir(((TaskSelector) task).getProject().getProjectDirectory());
+            } else {
+                throw new GradleException("Only Task or TaskSelector instances are supported.");
+            }
+        }
+        operationParamsBuilder.setTasks(taskPaths);
+        return this;
     }
 
     public void run() {
@@ -78,6 +91,8 @@ class DefaultBuildLauncher extends AbstractLongRunningOperation<DefaultBuildLaun
     }
 
     public void run(final ResultHandler<? super Void> handler) {
+        final ConnectionParameters connectionParameters = connectionParamsBuilder.build();
+        final ConsumerOperationParameters operationParameters = operationParamsBuilder.setParameters(connectionParameters).build();
         connection.run(new ConsumerAction<Void>() {
             public ConsumerOperationParameters getParameters() {
                 return operationParameters;

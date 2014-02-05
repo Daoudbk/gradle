@@ -16,6 +16,7 @@
 package org.gradle.tooling.model;
 
 import org.gradle.api.Incubating;
+import org.gradle.tooling.model.gradle.BasicGradleProject;
 
 /**
  * Represents an entry point that uses task name to select tasks executed from a given context.
@@ -29,4 +30,12 @@ public interface TaskSelector extends EntryPoint {
      * @return Display name of the task
      */
     String getDisplayName();
+
+    /**
+     * Returns the project used as a starting point for a build invoked by this
+     * task selector.
+     *
+     * @return The project context associated with this task selector.
+     */
+    BasicGradleProject getProject();
 }
