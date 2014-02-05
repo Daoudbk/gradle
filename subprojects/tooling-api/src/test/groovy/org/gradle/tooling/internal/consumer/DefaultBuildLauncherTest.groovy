@@ -28,7 +28,6 @@ import org.gradle.tooling.model.EntryPoint
 import org.gradle.tooling.model.GradleProject
 import org.gradle.tooling.model.Task
 import org.gradle.tooling.model.TaskSelector
-import org.gradle.tooling.model.gradle.BasicGradleProject
 
 class DefaultBuildLauncherTest extends ConcurrentSpec {
     final AsyncConsumerActionExecutor asyncConnection = Mock()
@@ -103,11 +102,9 @@ class DefaultBuildLauncherTest extends ConcurrentSpec {
     def "can configure task selector build operation"() {
         // TODO radim: can't build task selectors from different projects
         File projectDir = Mock(File)
-        BasicGradleProject project = Mock(BasicGradleProject)
-        _ * project.projectDirectory >> projectDir
         TaskSelector ts = Mock(TaskSelector)
         _ * ts.name >> 'myTask'
-        _ * ts.project >> project
+        _ * ts.projectDir >> projectDir
         ResultHandlerVersion1<Void> adaptedHandler
         ResultHandler<Void> handler = Mock()
         OutputStream stdout = Stub()

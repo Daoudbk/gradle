@@ -75,7 +75,7 @@ class DefaultBuildLauncher extends AbstractLongRunningOperation<DefaultBuildLaun
                 taskPaths.add(((Task) task).getPath());
             } else if (task instanceof TaskSelector) {
                 taskPaths.add(task.getName());
-                connectionParamsBuilder.setProjectDir(((TaskSelector) task).getProject().getProjectDirectory());
+                connectionParamsBuilder.setProjectDir(((TaskSelector) task).getProjectDir());
             } else {
                 throw new GradleException("Only Task or TaskSelector instances are supported.");
             }
