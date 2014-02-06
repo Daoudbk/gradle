@@ -16,9 +16,10 @@
 package org.gradle.tooling.internal.gradle;
 
 
+import java.io.Serializable;
 import java.util.List;
 
-public class DefaultBuildInvocations {
+public class DefaultBuildInvocations implements Serializable {
     private List<DefaultGradleTaskSelector> selectors;
 
     public DefaultBuildInvocations setSelectors(List<DefaultGradleTaskSelector> selectors) {
