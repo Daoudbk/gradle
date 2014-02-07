@@ -19,14 +19,10 @@ package org.gradle.integtests.tooling.r112
 import org.gradle.integtests.tooling.fixture.TargetGradleVersion
 import org.gradle.integtests.tooling.fixture.ToolingApiSpecification
 import org.gradle.integtests.tooling.fixture.ToolingApiVersion
-import org.gradle.tooling.BuildAction
-import org.gradle.tooling.BuildController
 import org.gradle.tooling.BuildLauncher
 import org.gradle.tooling.model.GradleProject
 import org.gradle.tooling.model.TaskSelector
 import org.gradle.tooling.model.gradle.BuildInvocations
-import org.gradle.tooling.model.gradle.GradleBuild
-import spock.lang.Unroll
 
 @ToolingApiVersion(">=1.12")
 class TaskSelectorCrossVersionSpec extends ToolingApiSpecification {

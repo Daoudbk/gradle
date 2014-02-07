@@ -26,6 +26,7 @@ import org.gradle.tooling.model.EntryPoint;
 import org.gradle.tooling.model.Task;
 import org.gradle.tooling.model.TaskSelector;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -75,7 +76,14 @@ class DefaultBuildLauncher extends AbstractLongRunningOperation<DefaultBuildLaun
                 taskPaths.add(((Task) task).getPath());
             } else if (task instanceof TaskSelector) {
                 taskPaths.add(task.getName());
-                connectionParamsBuilder.setProjectDir(((TaskSelector) task).getProjectDir());
+                File selectorDir = ((TaskSelector) task).getProjectDir();
+                ConnectionParameters origConnectionParameters = connectionParamsBuilder.build();
+                if (!selectorDir.equals(origConnectionParameters.getProjectDir())) {
+                    connectionParamsBuilder.setProjectDir(selectorDir);
+                    if (Boolean.FALSE.equals(connectionParamsBuilder.build().isSearchUpwards())) {
+                        connectionParamsBuilder.setSearchUpwards(true);
+                    }
+                }
             } else {
                 throw new GradleException("Only Task or TaskSelector instances are supported.");
             }

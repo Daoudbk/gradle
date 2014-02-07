@@ -16,22 +16,10 @@
 
 package org.gradle.integtests.tooling.r112;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import org.gradle.tooling.BuildAction;
 import org.gradle.tooling.BuildController;
-import org.gradle.tooling.model.GradleProject;
-import org.gradle.tooling.model.TaskSelector;
 import org.gradle.tooling.model.gradle.BasicGradleProject;
 import org.gradle.tooling.model.gradle.BuildInvocations;
-
-import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 public class FetchTaskSelectorsBuildAction implements BuildAction<BuildInvocations> {
     private final String projectName;
